@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Validation1</string>
+    <string name="title_activity_login">login</string>
+    <string name="title_activity_signup">signup</string>
+    <string name="title_activity_splash_screen">splash_screen</string>
+    <string name="title_activity_forgot_password">ForgotPassword</string>
+    <string name="title_activity_otpvalidation">OTPValidation</string>
+    <string name="title_activity_reset_password">ResetPassword</string>
+</resources>
