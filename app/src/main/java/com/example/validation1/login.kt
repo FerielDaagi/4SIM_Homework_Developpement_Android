@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,7 @@ import com.example.validation1.ui.theme.Validation1Theme
 class login : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.initialize(this)
         enableEdgeToEdge()
         setContent {
             Validation1Theme {
@@ -75,18 +77,51 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val isDarkMode by ThemeManager.isDarkModeState()
+
+    // Couleurs dynamiques selon le thème
+    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+    val textColor = if (isDarkMode) Color.White else Color.Black
+    val secondaryTextColor = if (isDarkMode) Color.White else colorResource(id = R.color.gamer_pink)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(backgroundColor)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Bouton Dark Mode en haut à droite
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(
+                onClick = { ThemeManager.toggleTheme(context) },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = if (isDarkMode) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            ) {
+                if (isDarkMode) {
+                    // Icône Soleil pour mode light
+                    SunIcon(tint = Color.White)
+                } else {
+                    // Icône Lune pour mode dark
+                    MoonIcon(tint = Color.Black)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Logo de l'app
         AppLogo()
-        
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -94,7 +129,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text("Email", color = secondaryTextColor) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -107,8 +142,10 @@ fun LoginScreen(
                 .height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                unfocusedTextColor = textColor,
+                focusedTextColor = textColor
             ),
             shape = RoundedCornerShape(8.dp)
         )
@@ -119,7 +156,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Password", color = secondaryTextColor) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
@@ -149,8 +186,10 @@ fun LoginScreen(
                 .height(56.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                unfocusedTextColor = textColor,
+                focusedTextColor = textColor
             ),
             shape = RoundedCornerShape(8.dp)
         )
@@ -174,7 +213,7 @@ fun LoginScreen(
                 )
                 Text(
                     text = "Remember Me",
-                    color = colorResource(id = R.color.gamer_pink),
+                    color = textColor,
                     fontSize = 14.sp
                 )
             }
@@ -213,7 +252,7 @@ fun LoginScreen(
         // OR text
         Text(
             text = "OR",
-            color = colorResource(id = R.color.gamer_pink),
+            color = textColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
@@ -261,7 +300,10 @@ fun LoginScreen(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, colorResource(id = R.color.border_gray)),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp,
+                    if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray)
+                ),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Row(
@@ -277,7 +319,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Google",
-                        color = Color.Black,
+                        color = textColor,
                         fontSize = 14.sp
                     )
                 }
@@ -292,13 +334,14 @@ fun LoginScreen(
         ) {
             Text(
                 text = "Don't have an account? ",
-                color = colorResource(id = R.color.gamer_pink),
+                color = textColor,
                 fontSize = 14.sp
             )
             Text(
                 text = "Register Now",
                 color = colorResource(id = R.color.gamer_pink),
                 fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { onNavigateToSignup() }
             )
         }
@@ -307,7 +350,6 @@ fun LoginScreen(
 
 @Composable
 fun AppLogo() {
-    // Utilisation du même logo que dans le splash screen
     Image(
         painter = painterResource(id = R.mipmap.logo_foreground),
         contentDescription = "App Logo",
@@ -330,21 +372,85 @@ fun EyeIcon(
         val centerX = size.width / 2
         val centerY = size.height / 2
         val radius = minOf(size.width, size.height) * 0.3f
-        
-        // Dessiner l'œil (cercle)
+
         drawCircle(
             color = tint,
             radius = radius,
             center = Offset(centerX, centerY),
             style = Stroke(width = strokeWidth)
         )
-        
-        // Dessiner la pupille (cercle plein)
+
         drawCircle(
             color = tint,
             radius = radius * 0.4f,
             center = Offset(centerX, centerY)
         )
+    }
+}
+
+@Composable
+fun MoonIcon(
+    tint: Color,
+    modifier: Modifier = Modifier
+) {
+    Canvas(
+        modifier = modifier.size(24.dp)
+    ) {
+        val centerX = size.width / 2
+        val centerY = size.height / 2
+        val radius = minOf(size.width, size.height) * 0.35f
+
+        // Croissant de lune
+        drawCircle(
+            color = tint,
+            radius = radius,
+            center = Offset(centerX - radius * 0.2f, centerY)
+        )
+
+        drawCircle(
+            color = Color.Transparent,
+            radius = radius * 0.8f,
+            center = Offset(centerX + radius * 0.3f, centerY - radius * 0.1f),
+            blendMode = androidx.compose.ui.graphics.BlendMode.Clear
+        )
+    }
+}
+
+@Composable
+fun SunIcon(
+    tint: Color,
+    modifier: Modifier = Modifier
+) {
+    Canvas(
+        modifier = modifier.size(24.dp)
+    ) {
+        val centerX = size.width / 2
+        val centerY = size.height / 2
+        val radius = minOf(size.width, size.height) * 0.25f
+        val rayLength = radius * 0.6f
+
+        // Cercle central (soleil)
+        drawCircle(
+            color = tint,
+            radius = radius,
+            center = Offset(centerX, centerY)
+        )
+
+        // Rayons du soleil (8 rayons)
+        for (i in 0..7) {
+            val angle = (i * 45f) * (Math.PI / 180f).toFloat()
+            val startX = centerX + kotlin.math.cos(angle) * (radius + 2.dp.toPx())
+            val startY = centerY + kotlin.math.sin(angle) * (radius + 2.dp.toPx())
+            val endX = centerX + kotlin.math.cos(angle) * (radius + rayLength + 2.dp.toPx())
+            val endY = centerY + kotlin.math.sin(angle) * (radius + rayLength + 2.dp.toPx())
+
+            drawLine(
+                color = tint,
+                start = Offset(startX, startY),
+                end = Offset(endX, endY),
+                strokeWidth = 2.dp.toPx()
+            )
+        }
     }
 }
 

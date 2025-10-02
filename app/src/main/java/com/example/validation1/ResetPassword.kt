@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,6 +36,7 @@ import com.example.validation1.ui.theme.Validation1Theme
 class ResetPassword : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.initialize(this)
         enableEdgeToEdge()
         setContent {
             Validation1Theme {
@@ -54,6 +60,13 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val isDarkMode by ThemeManager.isDarkModeState()
+
+    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+    val textColor = if (isDarkMode) Color.White else Color.Black
+    val secondaryTextColor = if (isDarkMode) Color.White else colorResource(id = R.color.gamer_pink)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,8 +80,26 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = { ThemeManager.toggleTheme(context) },
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(48.dp)
+                            .background(
+                                color = if (isDarkMode) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    ) {
+                        if (isDarkMode) {
+                            SunIcon(tint = Color.White)
+                        } else {
+                            MoonIcon(tint = Color.Black)
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = backgroundColor
                 )
             )
         }
@@ -76,7 +107,7 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = R.color.white))
+                .background(backgroundColor)
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -86,23 +117,19 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
             // Title
             Text(
                 text = "Enter the code sent to you by",
-                color = colorResource(id = R.color.black),
+                color = textColor,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
-
-
             )
             Text(
                 text = "Email or Mobile number",
-                color = colorResource(id = R.color.black),
+                color = textColor,
                 fontSize = 18.sp,
-
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
-
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -110,7 +137,7 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
             // Subtitle
             Text(
                 text = "Please enter your new password and confirm it.",
-                color = colorResource(id = R.color.black),
+                color = textColor,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
@@ -121,7 +148,7 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text("Password", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
@@ -151,8 +178,10 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -163,7 +192,7 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password") },
+                label = { Text("Confirm Password", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
@@ -193,8 +222,10 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -214,7 +245,7 @@ fun ResetPasswordScreen(onNavigateToLogin: () -> Unit = {}) {
             ) {
                 Text(
                     text = "Submit",
-                    color = colorResource(id = R.color.white),
+                    color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )

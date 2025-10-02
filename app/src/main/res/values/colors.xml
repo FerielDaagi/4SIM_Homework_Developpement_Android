@@ -14,4 +14,14 @@
     <color name="facebook_blue">#1877F2</color>
     <color name="light_gray">#F5F5F5</color>
     <color name="border_gray">#E0E0E0</color>
+
+    <!-- Light Mode Colors -->
+    <color name="background_light">#FFFFFF</color>
+    <color name="text_primary_light">#000000</color>
+    <color name="text_secondary_light">#666666</color>
+
+    <!-- Dark Mode Colors -->
+    <color name="background_dark">#000000</color>
+    <color name="text_primary_dark">#FFFFFF</color>
+    <color name="text_secondary_dark">#CCCCCC</color>
 </resources>

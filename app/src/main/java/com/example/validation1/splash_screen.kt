@@ -29,11 +29,11 @@ import kotlinx.coroutines.delay
 class Splash_screen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.initialize(this)
         enableEdgeToEdge()
         setContent {
             Validation1Theme {
                 SplashScreen {
-                    // Redirection vers la page de connexion après 3 secondes
                     val intent = Intent(this@Splash_screen, login::class.java)
                     startActivity(intent)
                     finish()
@@ -45,34 +45,33 @@ class Splash_screen : ComponentActivity() {
 
 @Composable
 fun SplashScreen(onNavigateToLogin: () -> Unit) {
+    val isDarkMode by ThemeManager.isDarkModeState()
+    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+
     LaunchedEffect(Unit) {
-        delay(3000) // Attendre 3 secondes
+        delay(3000)
         onNavigateToLogin()
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo de l'app (icône de lancement)
             SplashAppLogo()
-            
-            Spacer(modifier = Modifier.height(40.dp))
-            
 
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
 @Composable
 fun SplashAppLogo() {
-    // Utilisation de l'icône de l'app (logo_foreground) pour le splash screen
     Image(
         painter = painterResource(id = R.mipmap.logo_foreground),
         contentDescription = "App Logo",

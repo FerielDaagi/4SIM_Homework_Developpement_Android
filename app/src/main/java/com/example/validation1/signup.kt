@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import com.example.validation1.ui.theme.Validation1Theme
 class signup : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.initialize(this)
         enableEdgeToEdge()
         setContent {
             Validation1Theme {
@@ -64,6 +66,13 @@ fun SignupScreen() {
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val isDarkMode by ThemeManager.isDarkModeState()
+
+    val backgroundColor = if (isDarkMode) Color.Black else Color.White
+    val textColor = if (isDarkMode) Color.White else Color.Black
+    val secondaryTextColor = if (isDarkMode) Color.White else colorResource(id = R.color.gamer_pink)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,8 +86,26 @@ fun SignupScreen() {
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = { ThemeManager.toggleTheme(context) },
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(48.dp)
+                            .background(
+                                color = if (isDarkMode) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    ) {
+                        if (isDarkMode) {
+                            SunIcon(tint = Color.White)
+                        } else {
+                            MoonIcon(tint = Color.Black)
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = backgroundColor
                 )
             )
         }
@@ -86,7 +113,7 @@ fun SignupScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = R.color.white))
+                .background(backgroundColor)
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState()),
@@ -94,7 +121,6 @@ fun SignupScreen() {
         ) {
             Spacer(modifier = Modifier.height(5.dp))
 
-            // Logo de l'app
             AppLogo()
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -103,7 +129,7 @@ fun SignupScreen() {
             OutlinedTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                label = { Text("FullName") },
+                label = { Text("FullName", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
@@ -116,8 +142,10 @@ fun SignupScreen() {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -128,7 +156,7 @@ fun SignupScreen() {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text("Email", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Email,
@@ -142,8 +170,10 @@ fun SignupScreen() {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -154,7 +184,7 @@ fun SignupScreen() {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text("Password", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
@@ -184,8 +214,10 @@ fun SignupScreen() {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -196,7 +228,7 @@ fun SignupScreen() {
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm Password") },
+                label = { Text("Confirm Password", color = secondaryTextColor) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
@@ -226,8 +258,10 @@ fun SignupScreen() {
                     .height(56.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorResource(id = R.color.gamer_pink),
-                    unfocusedBorderColor = colorResource(id = R.color.border_gray),
-                    focusedLabelColor = colorResource(id = R.color.gamer_pink)
+                    unfocusedBorderColor = if (isDarkMode) Color.White.copy(alpha = 0.5f) else colorResource(id = R.color.border_gray),
+                    focusedLabelColor = colorResource(id = R.color.gamer_pink),
+                    unfocusedTextColor = textColor,
+                    focusedTextColor = textColor
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -247,7 +281,7 @@ fun SignupScreen() {
             ) {
                 Text(
                     text = "Submit",
-                    color = colorResource(id = R.color.white),
+                    color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -262,7 +296,7 @@ fun SignupScreen() {
             ) {
                 Text(
                     text = "By registering you agree to our ",
-                    color = colorResource(id = R.color.gamer_pink),
+                    color = textColor,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center
                 )
@@ -277,12 +311,11 @@ fun SignupScreen() {
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline,
-
                     modifier = Modifier.clickable { /* Handle terms */ }
                 )
                 Text(
                     text = " and ",
-                    color = colorResource(id = R.color.gamer_pink),
+                    color = textColor,
                     fontSize = 12.sp
                 )
                 Text(
@@ -299,7 +332,6 @@ fun SignupScreen() {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
