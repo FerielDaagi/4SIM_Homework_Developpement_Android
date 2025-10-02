@@ -44,15 +44,6 @@ class ResetPassword : ComponentActivity() {
             }
         }
     }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        // Navigation vers la page OTPValidation
-        val intent = Intent(this@ResetPassword, OTPValidation::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -52,15 +52,6 @@ class signup : ComponentActivity() {
             }
         }
     }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        // Navigation vers la page de connexion
-        val intent = Intent(this@signup, login::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

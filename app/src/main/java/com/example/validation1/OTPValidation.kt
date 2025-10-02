@@ -42,15 +42,6 @@ class OTPValidation : ComponentActivity() {
             }
         }
     }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        // Navigation vers la page ForgotPassword
-        val intent = Intent(this@OTPValidation, ForgotPassword::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +51,14 @@ fun OTPValidationScreen(onNavigateToResetPassword: () -> Unit = {}) {
     var otp2 by remember { mutableStateOf("") }
     var otp3 by remember { mutableStateOf("") }
     var otp4 by remember { mutableStateOf("") }
+    
+    // Fonction pour réinitialiser les champs OTP
+    val resetOTPFields = {
+        otp1 = ""
+        otp2 = ""
+        otp3 = ""
+        otp4 = ""
+    }
 
     Scaffold(
         topBar = {
@@ -162,7 +161,7 @@ fun OTPValidationScreen(onNavigateToResetPassword: () -> Unit = {}) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { /* Handle resend */ }
+                modifier = Modifier.clickable { resetOTPFields() }
 
             )
 

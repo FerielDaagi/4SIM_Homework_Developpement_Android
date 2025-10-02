@@ -35,25 +35,23 @@ class ForgotPassword : ComponentActivity() {
                     onNavigateToOTP = {
                         val intent = Intent(this@ForgotPassword, OTPValidation::class.java)
                         startActivity(intent)
+                    },
+                    onNavigateToResetPassword = {
+                        val intent = Intent(this@ForgotPassword, ResetPassword::class.java)
+                        startActivity(intent)
                     }
                 )
             }
         }
     }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        // Navigation vers la page de connexion
-        val intent = Intent(this@ForgotPassword, login::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(onNavigateToOTP: () -> Unit = {}) {
+fun ForgotPasswordScreen(
+    onNavigateToOTP: () -> Unit = {},
+    onNavigateToResetPassword: () -> Unit = {}
+) {
     var email by remember { mutableStateOf("") }
 
     Scaffold(
@@ -135,7 +133,7 @@ fun ForgotPasswordScreen(onNavigateToOTP: () -> Unit = {}) {
 
             // Submit Button
             Button(
-                onClick = { /* Handle submit */ },
+                onClick = { onNavigateToResetPassword() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

@@ -63,15 +63,6 @@ class login : ComponentActivity() {
             }
         }
     }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        // Navigation vers le splash screen
-        val intent = Intent(this@login, Splash_screen::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
 
 @Composable
